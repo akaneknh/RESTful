@@ -17,32 +17,32 @@ CRUND stads for:
 Create, Read, Update, Delete and Destroy
 */
 
-const comments = [
+let comments = [
   {
-      id: uuid(),
-      username: 'Todd',
-      comment: 'lol that is so funny!'
+    id: uuid(),
+    username: 'Todd',
+    comment: 'lol that is so funny!'
   },
   {
-      id: uuid(),
-      username: 'Skyler',
-      comment: 'I like to go birdwatching with my dog'
+    id: uuid(),
+    username: 'Skyler',
+    comment: 'I like to go birdwatching with my dog'
   },
   {
-      id: uuid(),
-      username: 'Sk8erBoi',
-      comment: 'Plz delete your account, Todd'
+    id: uuid(),
+    username: 'Sk8erBoi',
+    comment: 'Plz delete your account, Todd'
   },
   {
-      id: uuid(),
-      username: 'onlysayswoof',
-      comment: 'woof woof woof'
+    id: uuid(),
+    username: 'onlysayswoof',
+    comment: 'woof woof woof'
   }
 ];
 
 
 app.get('/comments', (req, res) => {
-  res.render('comments/index', {comments})
+  res.render('comments/index', { comments })
 });
 
 app.get('/comments/new', (req, res) => {
@@ -51,7 +51,7 @@ app.get('/comments/new', (req, res) => {
 
 app.post('/comments', (req, res) => {
   const { username, comment } = req.body;
-  comments.push({username,comment, id:uuid()});
+  comments.push({ username, comment, id: uuid() });
   res.redirect('/comments');
 })
 
@@ -63,7 +63,7 @@ app.get('/comments/:id', (req, res) => {
 
 app.get('/comments/:id/edit', (req, res) => {
   const { id } = req.params;
-  const comment =comments.find(c => c.id === id);
+  const comment = comments.find(c => c.id === id);
   res.render('comments/edit', { comment })
 })
 
@@ -75,6 +75,11 @@ app.patch('/comments/:id', (req, res) => {
   res.redirect('/comments')
 })
 
+app.delete('/comments/:id', (req, res) => {
+  const { id } = req.params;
+  comments = comments.filter(c => c.id != id);
+  res.redirect('/comments');
+})
 
 app.post('/tacos', (req, res) => {
   const { meat, qty } = req.body;
