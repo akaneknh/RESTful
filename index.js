@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const { v4: uuid } = require('uuid');
-
+const methodoverride = require('method-override')
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
@@ -11,7 +11,7 @@ app.use(express.json())
 app.get('/tacos', (req, res) => {
   res.send("GET /tacos response")
 })
-
+app.use(methodoverride('_method'))
 /**
 CRUND stads for:
 Create, Read, Update, Delete and Destroy
@@ -54,11 +54,28 @@ app.post('/comments', (req, res) => {
   comments.push({username,comment, id:uuid()});
   res.redirect('/comments');
 })
+
 app.get('/comments/:id', (req, res) => {
   const { id } = req.params;
-  const comment = comments.find(c => c.id === (id));
+  const comment = comments.find(c => c.id === id);
   res.render('comments/show', { comment })
 })
+
+app.get('/comments/:id/edit', (req, res) => {
+  const { id } = req.params;
+  const comment =comments.find(c => c.id === id);
+  res.render('comments/edit', { comment })
+})
+
+app.patch('/comments/:id', (req, res) => {
+  const { id } = req.params;
+  const newCommentText = req.body.comment;
+  const foundComment = comments.find(c => c.id === id);
+  foundComment.comment = newCommentText;
+  res.redirect('/comments')
+})
+
+
 app.post('/tacos', (req, res) => {
   const { meat, qty } = req.body;
   console.log(req.body)
